@@ -1,0 +1,145 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *, [data-theme="dark"] *));
+@custom-variant minimal (&:is([data-theme="minimal"] *));
+@custom-variant creative (&:is([data-theme="creative"] *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--secondary);
+  --color-accent-foreground: var(--foreground);
+  --color-destructive: var(--danger);
+  --color-destructive-foreground: #FFFFFF;
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--primary);
+  
+  --font-sans: var(--font-geist-sans), var(--font-inter), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+  --font-heading: var(--font-geist-sans), var(--font-inter), sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+}
+
+:root, [data-theme="light"] {
+  --background: #FAFAFA;
+  --foreground: #111827;
+  --card: #FFFFFF;
+  --card-foreground: #111827;
+  --primary: #2563EB;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --secondary: #E5E7EB;
+  --muted: #F3F4F6;
+  --muted-foreground: #6B7280;
+  --border: #E5E7EB;
+  --radius: 0.75rem;
+}
+
+.dark, [data-theme="dark"] {
+  --background: #09090B;
+  --foreground: #FAFAFA;
+  --card: #18181B;
+  --card-foreground: #FAFAFA;
+  --primary: #3B82F6;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --secondary: #27272A;
+  --muted: #27272A;
+  --muted-foreground: #A1A1AA;
+  --border: #27272A;
+  --radius: 0.75rem;
+}
+
+[data-theme="minimal"] {
+  --background: #FFFFFF;
+  --foreground: #000000;
+  --card: #FFFFFF;
+  --card-foreground: #000000;
+  --primary: #000000;
+  --success: #000000;
+  --warning: #666666;
+  --danger: #000000;
+  --secondary: #F0F0F0;
+  --muted: #F9F9F9;
+  --muted-foreground: #666666;
+  --border: #E0E0E0;
+  --radius: 0.25rem;
+}
+
+[data-theme="creative"] {
+  --background: #0F0C29;
+  --foreground: #FFFFFF;
+  --card: #1F1B40;
+  --card-foreground: #FFFFFF;
+  --primary: #8E2DE2;
+  --success: #00B4DB;
+  --warning: #F5AF19;
+  --danger: #FF416C;
+  --secondary: #24243E;
+  --muted: #2A2A4A;
+  --muted-foreground: #B0B0C0;
+  --border: #4A4A6A;
+  --radius: 1rem;
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground transition-colors duration-300; }
+  html { @apply font-sans; }
+  h1 { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; }
+  h2 { font-size: 1.875rem; line-height: 2.25rem; font-weight: 600; }
+  h3 { font-size: 1.5rem; line-height: 2rem; font-weight: 600; }
+}
+
+[data-theme="minimal"] * {
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+[data-theme="minimal"] button, 
+[data-theme="minimal"] input, 
+[data-theme="minimal"] .card {
+  border-radius: 4px !important;
+  transition: none !important;
+}
+
+[data-theme="creative"] {
+  background: linear-gradient(to right, #0F0C29, #302B63, #24243E);
+}
+
+[data-theme="creative"] .bg-background {
+  background: transparent;
+}
+
+[data-theme="creative"] .card {
+  box-shadow: 0 4px 24px -6px rgba(142,45,226,0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(31, 27, 64, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+[data-theme="creative"] .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px -8px rgba(142,45,226,0.5);
+}

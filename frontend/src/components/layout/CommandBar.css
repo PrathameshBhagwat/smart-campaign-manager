@@ -1,0 +1,64 @@
+.cmdk-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15vh;
+}
+
+.cmdk-dialog {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 600px;
+  overflow: hidden;
+  font-family: var(--font-sans);
+}
+
+.cmdk-input-wrapper input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 16px;
+  font-size: 16px;
+  outline: none;
+  color: var(--foreground);
+}
+
+.cmdk-input-wrapper input::placeholder {
+  color: var(--muted-foreground);
+}
+
+[cmdk-group-heading] {
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+[cmdk-item] {
+  padding: 12px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--foreground);
+}
+
+[cmdk-item][aria-selected='true'] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+[cmdk-item][aria-selected='true'] svg {
+  color: var(--primary-foreground);
+}
