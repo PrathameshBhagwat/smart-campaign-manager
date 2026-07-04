@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     PROJECT_NAME: str = "AI Outreach Platform API"
     API_V1_STR: str = "/api/v1"
-    BACKEND_CORS_ORIGINS: list[str] | str = ["http://localhost:3000"]
+    BACKEND_CORS_ORIGINS: list[str] | str = ["*"]
 
     SUPABASE_URL: str
     SUPABASE_SERVICE_KEY: str
