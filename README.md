@@ -1,6 +1,6 @@
 <div align="center">
   
-  # 🦅 Eagle Vision: Smart Campaign Manager
+  # 🚀 Smart Campaign Manager
   
   **An advanced, AI-powered outreach automation platform designed for modern training institutes and businesses.**
 
@@ -136,5 +136,5 @@ To deploy this platform live to a server (like AWS EC2), you don't need to insta
 ---
 
 <div align="center">
-  <b>Built with ❤️ for Eagle Vision Learning World</b>
+  <b>Built with ❤️ by Prathamesh Bhagwat</b>
 </div>
