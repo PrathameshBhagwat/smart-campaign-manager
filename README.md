@@ -88,7 +88,10 @@ Copy `.env.example` to `.env` and configure:
 ```env
 SUPABASE_URL=your_supabase_url
 SUPABASE_SERVICE_KEY=your_supabase_service_key
-GROQ_API_KEY=your_groq_api_key
+
+# We use the OpenAI SDK pointed to Groq's ultra-fast API
+OPENAI_API_KEY=your_groq_api_key
+OPENAI_BASE_URL=https://api.groq.com/openai/v1
 ```
 Start the server: `uvicorn app.main:app --reload` (Runs on port 8000)
 
@@ -116,7 +119,8 @@ For deploying to a VPS (like AWS EC2), the repository includes Docker configurat
    ```env
    SUPABASE_URL=...
    SUPABASE_SERVICE_KEY=...
-   GROQ_API_KEY=...
+   OPENAI_API_KEY=... (your Groq API key)
+   OPENAI_BASE_URL=https://api.groq.com/openai/v1
    NEXT_PUBLIC_SUPABASE_URL=...
    NEXT_PUBLIC_SUPABASE_ANON_KEY=...
    ```
