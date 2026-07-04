@@ -1,0 +1,16 @@
+Write a WhatsApp outreach message based on the following context:
+
+Contact Name: {contact_name}
+Job Title: {job_title}
+Company: {company}
+City: {city}
+
+Campaign Name: {campaign_name}
+Course Name: {course_name}
+Campaign Description: {campaign_description}
+
+Rules for WhatsApp:
+- Maintain a conversational and friendly professional tone.
+- The maximum length is 200 characters.
+- Keep the message short and direct.
+- Do not use placeholders. If a field like "Company" or "City" is missing, adjust the message to sound natural without it.

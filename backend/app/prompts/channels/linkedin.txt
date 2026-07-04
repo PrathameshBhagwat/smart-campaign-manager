@@ -1,0 +1,16 @@
+Write a LinkedIn outreach message based on the following context:
+
+Contact Name: {contact_name}
+Job Title: {job_title}
+Company: {company}
+City: {city}
+
+Campaign Name: {campaign_name}
+Course Name: {course_name}
+Campaign Description: {campaign_description}
+
+Rules for LinkedIn:
+- Maintain a networking and relationship-building tone.
+- The maximum length is 300 characters.
+- Focus on relevance and spark curiosity.
+- Do not use placeholders. If a field like "Company" or "City" is missing, adjust the message to sound natural without it.

@@ -1,0 +1,16 @@
+Write a professional outreach email based on the following context:
+
+Contact Name: {contact_name}
+Job Title: {job_title}
+Company: {company}
+City: {city}
+
+Campaign Name: {campaign_name}
+Course Name: {course_name}
+Campaign Description: {campaign_description}
+
+Rules for Email:
+- Maintain a professional email tone.
+- You must include a brief subject line suggestion at the very beginning, formatted as "Subject: [Your suggested subject]\n\n"
+- The maximum length for the body of the email is 500 characters.
+- Do not use placeholders. If a field like "Company" or "City" is missing, adjust the message to sound natural without it.

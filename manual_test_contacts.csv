@@ -1,0 +1,5 @@
+name,email,phone,company,job_title,city,linkedin_url
+John Doe,john.doe@example.com,1234567890,Tech Corp,Software Engineer,New York,https://linkedin.com/in/johndoe
+Jane Smith,jane.smith@example.com,0987654321,Design Studio,UX Designer,San Francisco,https://linkedin.com/in/janesmith
+Alice Johnson,alice.j@example.com,5551234567,Data Innovations,Data Scientist,London,https://linkedin.com/in/alicej
+Bob Williams,bob.w@example.com,4449876543,Sales Force,Account Executive,Chicago,https://linkedin.com/in/bobw

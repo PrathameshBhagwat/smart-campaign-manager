@@ -1,0 +1,11 @@
+Write a personalized outreach message for the following prospect:
+
+Name: {name}
+Company: {company}
+Job Title: {job_title}
+City: {city}
+
+We are offering a course on: {course_name}
+Campaign context: {campaign_name}
+
+The message should be professional, friendly, under 80 words, and include a clear call to action asking if they are open to a brief chat or learning more.
