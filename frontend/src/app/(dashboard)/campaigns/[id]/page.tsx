@@ -314,10 +314,24 @@ export default function CampaignDetailsPage() {
                 <Download className="h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => window.open(BulkService.getExportUrl(campaignId, 'all', 'csv'), '_blank')}>
+                <DropdownMenuItem onClick={async () => {
+                  try {
+                    await BulkService.exportMessages(campaignId, 'all', 'csv', campaign?.name || 'campaign')
+                    toast.success('CSV export completed successfully')
+                  } catch {
+                    toast.error('Failed to export CSV')
+                  }
+                }}>
                   Export as CSV
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => window.open(BulkService.getExportUrl(campaignId, 'all', 'xlsx'), '_blank')}>
+                <DropdownMenuItem onClick={async () => {
+                  try {
+                    await BulkService.exportMessages(campaignId, 'all', 'xlsx', campaign?.name || 'campaign')
+                    toast.success('XLSX export completed successfully')
+                  } catch {
+                    toast.error('Failed to export XLSX')
+                  }
+                }}>
                   Export as XLSX
                 </DropdownMenuItem>
               </DropdownMenuContent>

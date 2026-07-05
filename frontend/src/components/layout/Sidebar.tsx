@@ -70,7 +70,7 @@ export function Sidebar() {
               exit={{ opacity: 0 }}
               className="font-bold text-lg text-primary truncate"
             >
-              Eagle Vision
+              Smart Campaign Manager
             </motion.span>
           )}
           <Button 

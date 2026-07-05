@@ -1,5 +1,6 @@
 import api from './api';
 import { BulkGenerateRequest, BulkJobResponse, BulkJobProgressResponse, BulkJobPreviewResponse } from '@/types/bulk';
+import { createClient } from '@/lib/supabase/client';
 
 export const BulkService = {
   previewJob: async (campaignId: string, data: BulkGenerateRequest): Promise<BulkJobPreviewResponse> => {
@@ -50,5 +51,34 @@ export const BulkService = {
   getExportUrl: (campaignId: string, channel: string, formatType: string) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     return `${apiUrl}/api/v1/campaigns/${campaignId}/messages/export?channel=${channel}&format_type=${formatType}`;
+  },
+
+  exportMessages: async (campaignId: string, channel: string, formatType: 'csv' | 'xlsx', campaignName: string) => {
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+    
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const url = `${apiUrl}/api/v1/campaigns/${campaignId}/messages/export?channel=${channel}&format_type=${formatType}`;
+    
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Export failed');
+    }
+    
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `${campaignName.replace(/\s+/g, '_')}_export.${formatType}`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(downloadUrl);
   }
 };
