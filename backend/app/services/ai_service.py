@@ -284,7 +284,9 @@ class AIService:
             response = AIService.generate_completion_with_validation(system_prompt, user_prompt, channel, business_type)
         except Exception as e:
             import logging
-            logging.error(f"AI Generation failed: {str(e)}")
+            import traceback
+            logging.error(f"AI Generation failed for contact {contact_id}: {str(e)}")
+            logging.error(f"Full traceback: {traceback.format_exc()}")
             
             error_msg = str(e)
             error_type = "Provider Error"
@@ -296,6 +298,10 @@ class AIService:
                 error_type = "Prompt Validation Failed"
             elif "Empty output" in error_msg:
                 error_type = "Invalid Output"
+            elif "401" in error_msg or "Unauthorized" in error_msg or "Invalid API Key" in error_msg:
+                error_type = "Invalid API Key"
+            elif "model" in error_msg.lower() and ("not found" in error_msg.lower() or "does not exist" in error_msg.lower()):
+                error_type = "Invalid Model"
                 
             duration_ms = int((time.time() - start_time) * 1000)
             
@@ -311,7 +317,7 @@ class AIService:
             
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail={"code": "AI_GENERATION_FAILED", "message": "Unable to generate a valid message right now. Check server logs."}
+                detail={"code": "AI_GENERATION_FAILED", "message": f"AI generation failed: {error_type}. Details: {error_msg[:200]}"}
             )
             
         generation_duration_ms = int((time.time() - start_time) * 1000)

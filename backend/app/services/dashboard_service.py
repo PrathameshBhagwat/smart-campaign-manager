@@ -197,23 +197,23 @@ class DashboardService:
     @staticmethod
     def get_recent_campaigns(user_id: str) -> List[RecentCampaign]:
         supabase = get_supabase_client()
-        campaigns_res = supabase.table('campaigns').select('id, name, created_at, updated_at').eq('user_id', user_id).execute()
-        campaigns = campaigns_res.data or []
-        if not campaigns:
+        try:
+            campaigns_res = supabase.table('campaigns').select('id, name, created_at, updated_at').eq('user_id', user_id).order('created_at', desc=True).limit(5).execute()
+            campaigns = campaigns_res.data or []
+            if not campaigns:
+                return []
+                
+            recent = []
+            for c in campaigns:
+                t = c.get('updated_at') or c.get('created_at') or datetime.utcnow().isoformat()
+                recent.append({
+                    "id": str(c['id']),
+                    "name": c.get('name', 'Untitled Campaign'),
+                    "last_activity": t
+                })
+                
+            return [RecentCampaign(**r) for r in recent]
+        except Exception as e:
+            import logging
+            logging.error(f"Error fetching recent campaigns: {e}")
             return []
-            
-        # We define "last_activity" by looking at the latest updated_at or created_at of the campaign
-        # since we don't have a dedicated last_activity_at column and want to avoid heavy schemas.
-        # Alternatively, we just use the campaign's updated_at.
-        recent = []
-        for c in campaigns:
-            t = c.get('updated_at') or c.get('created_at')
-            recent.append({
-                "id": c['id'],
-                "name": c['name'],
-                "last_activity": t
-            })
-            
-        recent.sort(key=lambda x: x['last_activity'], reverse=True)
-        paged = recent[:5]
-        return [RecentCampaign(**r) for r in paged]
