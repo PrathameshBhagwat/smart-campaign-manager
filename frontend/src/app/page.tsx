@@ -131,6 +131,19 @@ export default function LandingPage() {
             animate="visible"
             className="space-y-6"
           >
+            {/* Minimalist Logo Integration in Hero */}
+            <motion.div variants={itemVariants} className="flex justify-center">
+              <div className="w-20 h-20 rounded-2xl bg-zinc-900 border border-zinc-800 p-4 flex items-center justify-center shadow-sm">
+                <Image 
+                  src="/logo.webp" 
+                  alt="Logo" 
+                  width={48} 
+                  height={48}
+                  className="object-contain"
+                />
+              </div>
+            </motion.div>
+
             <motion.div variants={itemVariants} className="inline-block">
               <Badge variant="outline" className="px-3.5 py-1 text-xs border-zinc-800 bg-zinc-900/50 text-zinc-400 gap-1.5 rounded-full inline-flex">
                 Powered by Groq & Llama 3
@@ -139,16 +152,16 @@ export default function LandingPage() {
             
             <motion.h1 
               variants={itemVariants} 
-              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight max-w-3xl mx-auto leading-[1.1] text-zinc-100 text-balance"
+              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight max-w-5xl mx-auto leading-[1.05] text-zinc-100 text-balance"
             >
-              Outreach Personalization for Scale-Focused Teams
+              Smart Campaign Manager
             </motion.h1>
 
             <motion.p 
               variants={itemVariants} 
-              className="text-base md:text-lg text-zinc-400 max-w-2xl mx-auto font-normal text-balance"
+              className="text-base md:text-xl text-zinc-400 max-w-3xl mx-auto font-normal text-balance"
             >
-              Import contacts, configure campaign guidelines, and instantly bulk-generate highly tailored messages for LinkedIn, Email, and WhatsApp.
+              AI-powered outreach automation integrating LinkedIn, Email, and WhatsApp campaign personalization.
             </motion.p>
 
             <motion.div 
