@@ -76,7 +76,7 @@ export default function LandingPage() {
             <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-gradient-to-br from-indigo-500 to-violet-600 p-[1px]">
               <div className="w-full h-full bg-slate-950 rounded-lg flex items-center justify-center">
                 <Image 
-                  src="/logo.png" 
+                  src="/logo.webp" 
                   alt="Logo" 
                   width={24} 
                   height={24}

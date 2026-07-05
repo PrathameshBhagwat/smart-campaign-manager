@@ -16,8 +16,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Outreach Platform",
-  description: "AI-powered outreach automation for training institutes",
+  title: "Smart Campaign Manager | AI Outreach Platform",
+  description: "AI-powered outreach automation for LinkedIn, Email, and WhatsApp campaign management.",
+  icons: {
+    icon: "/logo.webp",
+  },
 };
 
 export default function RootLayout({
