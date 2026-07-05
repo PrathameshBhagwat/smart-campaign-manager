@@ -10,6 +10,9 @@ from app.middleware.request_id import RequestTracingMiddleware
 from app.middleware.error_handler import custom_exception_handler
 from app.core.exceptions import APIException
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -26,16 +29,23 @@ app.add_exception_handler(RequestValidationError, custom_exception_handler)
 # Middleware
 app.add_middleware(RequestTracingMiddleware)
 
-# Parse CORS origins if they are a string
-if isinstance(settings.BACKEND_CORS_ORIGINS, str):
-    origins = json.loads(settings.BACKEND_CORS_ORIGINS)
-else:
-    origins = settings.BACKEND_CORS_ORIGINS
+# Parse CORS origins safely — malformed JSON won't crash the app
+try:
+    if isinstance(settings.BACKEND_CORS_ORIGINS, str):
+        origins = json.loads(settings.BACKEND_CORS_ORIGINS)
+    else:
+        origins = settings.BACKEND_CORS_ORIGINS
+except (json.JSONDecodeError, Exception) as e:
+    logger.warning(f"Failed to parse BACKEND_CORS_ORIGINS, falling back to allow all: {e}")
+    origins = ["*"]
+
+# When allowing all origins, disable credentials to avoid browser CORS conflict
+allow_credentials = "*" not in origins
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,
+    allow_credentials=allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -44,7 +54,7 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to AI Outreach Platform API"}
+    return {"message": "Welcome to Smart Campaign Manager API"}
 
 @app.get("/health")
 def health_check():

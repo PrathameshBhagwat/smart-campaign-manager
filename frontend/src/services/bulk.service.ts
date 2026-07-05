@@ -48,6 +48,7 @@ export const BulkService = {
   },
 
   getExportUrl: (campaignId: string, channel: string, formatType: string) => {
-    return `${process.env.NEXT_PUBLIC_API_URL}/campaigns/${campaignId}/messages/export?channel=${channel}&format_type=${formatType}`;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    return `${apiUrl}/api/v1/campaigns/${campaignId}/messages/export?channel=${channel}&format_type=${formatType}`;
   }
 };

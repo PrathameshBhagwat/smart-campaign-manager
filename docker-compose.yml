@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -13,10 +11,14 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - OPENAI_BASE_URL=${OPENAI_BASE_URL}
       - OPENAI_MODEL=${OPENAI_MODEL}
-      # Add other necessary backend variables here
+      - OPENAI_MAX_TOKENS=${OPENAI_MAX_TOKENS:-500}
+      - OPENAI_TIMEOUT_SECONDS=${OPENAI_TIMEOUT_SECONDS:-30}
+      - OPENAI_TEMPERATURE=${OPENAI_TEMPERATURE:-0.7}
+      - OPENAI_MAX_DAILY_GENERATIONS=${OPENAI_MAX_DAILY_GENERATIONS:-100}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS:-["*"]}
     restart: always
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -38,6 +40,3 @@ services:
     depends_on:
       - backend
     restart: always
-
-# Note: In a production environment, you would typically place an Nginx reverse proxy 
-# in front of these services to handle SSL (HTTPS) and route traffic to the correct ports.

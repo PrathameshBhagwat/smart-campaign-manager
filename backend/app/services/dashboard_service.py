@@ -135,13 +135,13 @@ class DashboardService:
         camps = supabase.table('campaigns').select('id').eq('user_id', user_id).execute()
         if camps.data:
             cids = [c['id'] for c in camps.data]
-            imports = supabase.table('imports').select('status, total_rows, created_at').in_('campaign_id', cids).order('created_at', desc=True).limit(limit).execute()
+            imports = supabase.table('imports').select('status, imported_count, created_at').in_('campaign_id', cids).order('created_at', desc=True).limit(limit).execute()
             for imp in (imports.data or []):
                 time_str = imp.get('created_at')
                 if time_str:
                     activities.append({
                         "type": "import",
-                        "message": f"Imported {imp['total_rows']} contacts ({imp['status']})",
+                        "message": f"Imported {imp.get('imported_count', 0)} contacts ({imp['status']})",
                         "created_at": time_str
                     })
         
