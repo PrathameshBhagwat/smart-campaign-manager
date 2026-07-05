@@ -54,7 +54,7 @@ export default function LoginPage() {
       return
     }
 
-    router.push('/dashboard')
+    router.push('/')
     router.refresh() // Ensure server components re-render with new auth state
   }
 
