@@ -13,6 +13,12 @@ import { toast } from 'sonner'
 import { Contact } from '@/types/contact'
 import { LinkedInButton } from '@/components/contacts/LinkedInButton'
 import { EmailButton } from '@/components/contacts/EmailButton'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 interface MessageListProps {
   contact: Contact
@@ -121,12 +127,12 @@ export function MessageList({ contact }: MessageListProps) {
 
   const [cachedIds, setCachedIds] = useState<Set<string>>(new Set())
 
-  const handleGenerateAI = async () => {
+  const handleGenerateAI = async (channel: 'linkedin' | 'email' | 'whatsapp') => {
     setIsGeneratingAI(true)
     try {
-      // We will generate for linkedin by default for the AI outreach feature unless specified
-      const res = await MessageService.generateMessage(contactId, 'linkedin')
-      toast.success('AI message generated successfully')
+      const res = await MessageService.generateMessage(contactId, channel)
+      const channelNames = { linkedin: 'LinkedIn', email: 'Email', whatsapp: 'WhatsApp' }
+      toast.success(`AI ${channelNames[channel]} message generated successfully`)
       if (res.cached && res.message?.id) {
         setCachedIds(prev => new Set(prev).add(res.message.id))
       }
@@ -135,6 +141,18 @@ export function MessageList({ contact }: MessageListProps) {
       toast.error(error.message || 'Unable to generate message right now. Please try again.')
     } finally {
       setIsGeneratingAI(false)
+    }
+  }
+
+  const handleArchive = async (messageId: string, currentStatus: string) => {
+    const isArchived = currentStatus === 'archived'
+    const newStatus = isArchived ? 'ready' : 'archived'
+    try {
+      await MessageService.updateMessage(messageId, { status: newStatus })
+      toast.success(isArchived ? 'Message unarchived' : 'Message archived')
+      fetchMessages()
+    } catch (error: any) {
+      toast.error(error.message || `Failed to ${isArchived ? 'unarchive' : 'archive'} message`)
     }
   }
 
@@ -148,10 +166,35 @@ export function MessageList({ contact }: MessageListProps) {
 
   const handleCopyNote = async () => {
     const note = `Hi ${contactName.split(' ')[0]},\nI came across your profile and would love to connect.`
-    try {
-      await navigator.clipboard.writeText(note)
+    let copied = false
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(note)
+        copied = true
+      } catch {
+        copied = false
+      }
+    }
+    if (!copied) {
+      const textArea = document.createElement("textarea")
+      textArea.value = note
+      textArea.style.position = "fixed"
+      textArea.style.left = "-999999px"
+      textArea.style.top = "-999999px"
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      try {
+        document.execCommand('copy')
+        copied = true
+      } catch {
+        copied = false
+      }
+      textArea.remove()
+    }
+    if (copied) {
       toast.success('Connection note copied to clipboard')
-    } catch {
+    } else {
       toast.error('Failed to copy note')
     }
   }
@@ -177,20 +220,29 @@ export function MessageList({ contact }: MessageListProps) {
       
       <div className="flex items-center justify-end border-b pb-4">
         <div className="flex items-center gap-2">
-          {!hasAIMessage && (
-            <Button 
-              size="sm" 
-              variant="secondary"
-              onClick={handleGenerateAI} 
+          <DropdownMenu>
+            <DropdownMenuTrigger 
               disabled={isGeneratingAI}
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-3 gap-2"
             >
               {isGeneratingAI ? (
                 <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> {loadingText}</>
               ) : (
                 <>Generate AI Message</>
               )}
-            </Button>
-          )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleGenerateAI('linkedin')}>
+                LinkedIn Message
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleGenerateAI('email')}>
+                Email Message
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleGenerateAI('whatsapp')}>
+                WhatsApp Message
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {!showForm && !editingMessage && (
             <Button size="sm" onClick={() => setShowForm(true)} disabled={isGeneratingAI}>
               <Plus className="w-4 h-4 mr-1" /> New Message
@@ -232,9 +284,11 @@ export function MessageList({ contact }: MessageListProps) {
             <MessageCard
               key={message.id}
               message={message}
+              contact={contact}
               onCopy={handleCopy}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              onArchive={handleArchive}
               disabled={isGeneratingAI}
               cached={cachedIds.has(message.id)}
             />

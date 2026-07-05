@@ -10,6 +10,7 @@ export interface Contact {
   status: 'New' | 'Contacted' | 'Interested' | 'Enrolled';
   linkedin_url?: string;
   preferred_contact_method?: 'linkedin' | 'email';
+  latest_ai_message_status?: 'ready' | 'failed' | 'processing' | null;
   created_at: string;
 }
 

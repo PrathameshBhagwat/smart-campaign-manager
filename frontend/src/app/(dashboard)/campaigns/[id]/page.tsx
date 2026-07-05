@@ -392,7 +392,7 @@ export default function CampaignDetailsPage() {
 
       {/* Message Sheet Drawer */}
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent className="w-full md:max-w-2xl overflow-y-auto overflow-x-hidden">
+        <SheetContent className="w-full sm:max-w-3xl md:max-w-4xl overflow-y-auto overflow-x-hidden">
           <SheetHeader>
             <SheetTitle>Messages for {selectedContact?.name}</SheetTitle>
             <SheetDescription>

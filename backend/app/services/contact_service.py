@@ -24,7 +24,7 @@ class ContactService:
         
         # Start building the query
         # Since we need total count, we execute a count query first
-        query = supabase.table('contacts').select('*', count='exact').eq('campaign_id', campaign_id)
+        query = supabase.table('contacts').select('*, messages(status, generation_source)', count='exact').eq('campaign_id', campaign_id)
         
         # Apply filters
         if status_filter:
@@ -49,7 +49,22 @@ class ContactService:
         total_count = result.count if result.count is not None else 0
         total_pages = (total_count + limit - 1) // limit if total_count > 0 else 1
         
-        contacts = [ContactResponse(**item) for item in result.data]
+        contacts = []
+        for item in result.data:
+            ai_msgs = [m for m in item.get('messages', []) if m.get('generation_source') == 'ai']
+            if ai_msgs:
+                statuses = [m.get('status') for m in ai_msgs]
+                if 'ready' in statuses:
+                    item['latest_ai_message_status'] = 'ready'
+                elif 'failed' in statuses:
+                    item['latest_ai_message_status'] = 'failed'
+                elif 'processing' in statuses:
+                    item['latest_ai_message_status'] = 'processing'
+                else:
+                    item['latest_ai_message_status'] = statuses[0] if statuses else None
+            else:
+                item['latest_ai_message_status'] = None
+            contacts.append(ContactResponse(**item))
         
         return PaginatedContacts(
             contacts=contacts,

@@ -28,6 +28,10 @@ class MessageUpdate(BaseModel):
         None,
         description="Updated channel: linkedin, whatsapp, or email"
     )
+    status: Optional[str] = Field(
+        None,
+        description="Updated status: draft, ready, failed, archived"
+    )
 
 class MessageResponse(BaseModel):
     id: UUID

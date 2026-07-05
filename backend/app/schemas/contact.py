@@ -23,6 +23,7 @@ class ContactResponse(ContactBase):
     created_at: datetime
     linkedin_url: Optional[str] = None
     preferred_contact_method: Optional[str] = None
+    latest_ai_message_status: Optional[str] = None
 
     class Config:
         from_attributes = True

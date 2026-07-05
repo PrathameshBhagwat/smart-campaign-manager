@@ -100,7 +100,18 @@ export function ContactTable({
                     {getInitials(contact.name)}
                   </div>
                   <div>
-                    <div className="text-foreground">{contact.name}</div>
+                    <div className="text-foreground flex items-center gap-2">
+                      {contact.name}
+                      {contact.latest_ai_message_status === 'ready' && (
+                        <span className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)] shrink-0" title="AI outreach message generated" />
+                      )}
+                      {contact.latest_ai_message_status === 'failed' && (
+                        <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)] shrink-0" title="AI message generation failed" />
+                      )}
+                      {contact.latest_ai_message_status === 'processing' && (
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping shadow-[0_0_8px_rgba(245,158,11,0.5)] shrink-0" title="AI message is generating..." />
+                      )}
+                    </div>
                     <div className="text-xs text-muted-foreground">{contact.job_title}</div>
                   </div>
                 </div>

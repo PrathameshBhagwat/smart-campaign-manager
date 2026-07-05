@@ -45,6 +45,7 @@ export interface MessageCreate {
 export interface MessageUpdate {
   content?: string;
   channel?: 'linkedin' | 'whatsapp' | 'email';
+  status?: 'draft' | 'ready' | 'archived' | 'failed';
 }
 
 export interface CopyResponse {

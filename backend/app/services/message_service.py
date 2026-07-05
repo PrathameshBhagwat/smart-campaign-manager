@@ -125,6 +125,13 @@ class MessageService:
             update_data["content"] = data.content
         if data.channel is not None:
             update_data["channel"] = data.channel
+        if data.status is not None:
+            if data.status not in ["draft", "ready", "failed", "archived"]:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Invalid status: {data.status}. Must be one of: draft, ready, failed, archived"
+                )
+            update_data["status"] = data.status
 
         if not update_data:
             raise HTTPException(

@@ -1,17 +1,21 @@
 'use client'
 
 import { Message } from '@/types/message'
+import { Contact } from '@/types/contact'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Copy, Pencil, Trash2, Check, Clock, Mail, ChevronDown, ChevronUp, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+import { toast } from 'sonner'
 
 interface MessageCardProps {
   message: Message
+  contact: Contact
   onCopy: (messageId: string) => Promise<void>
   onEdit: (message: Message) => void
   onDelete: (messageId: string) => Promise<void>
+  onArchive: (messageId: string, currentStatus: string) => Promise<void>
   disabled?: boolean
   cached?: boolean
 }
@@ -27,22 +31,58 @@ const sourceConfig: Record<string, { label: string; className: string }> = {
   ai: { label: 'AI Generated', className: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300' }
 }
 
-export function MessageCard({ message, onCopy, onEdit, onDelete, disabled, cached }: MessageCardProps) {
+export function MessageCard({ message, contact, onCopy, onEdit, onDelete, onArchive, disabled, cached }: MessageCardProps) {
   const [copied, setCopied] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isArchiving, setIsArchiving] = useState(false)
   const [showReasons, setShowReasons] = useState(false)
 
   const channel = channelConfig[message.channel] || channelConfig.linkedin
   const source = sourceConfig[message.generation_source] || sourceConfig.manual
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(message.content)
+    let copiedSuccess = false
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(message.content)
+        copiedSuccess = true
+      } catch {
+        copiedSuccess = false
+      }
+    }
+    if (!copiedSuccess) {
+      const textArea = document.createElement("textarea")
+      textArea.value = message.content
+      textArea.style.position = "fixed"
+      textArea.style.left = "-999999px"
+      textArea.style.top = "-999999px"
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      try {
+        document.execCommand('copy')
+        copiedSuccess = true
+      } catch {
+        copiedSuccess = false
+      }
+      textArea.remove()
+    }
+    if (copiedSuccess) {
       setCopied(true)
       await onCopy(message.id)
       setTimeout(() => setCopied(false), 2000)
-    } catch {
+    } else {
       setCopied(false)
+      toast.error('Failed to copy message to clipboard')
+    }
+  }
+
+  const handleArchive = async () => {
+    setIsArchiving(true)
+    try {
+      await onArchive(message.id, message.status)
+    } finally {
+      setIsArchiving(false)
     }
   }
 
@@ -159,7 +199,18 @@ export function MessageCard({ message, onCopy, onEdit, onDelete, disabled, cache
             </Button>
           )}
           {message.channel === 'linkedin' && (
-            <Button variant="outline" size="sm" className="gap-2 text-blue-600">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => {
+                if (contact.linkedin_url) {
+                  window.open(contact.linkedin_url, '_blank')
+                } else {
+                  toast.error('LinkedIn URL not found for this contact')
+                }
+              }}
+              className="gap-2 text-blue-600"
+            >
               <Sparkles className="w-4 h-4" /> LinkedIn
             </Button>
           )}
@@ -185,10 +236,11 @@ export function MessageCard({ message, onCopy, onEdit, onDelete, disabled, cache
           <Button
             variant="outline"
             size="sm"
-            disabled={disabled}
+            onClick={handleArchive}
+            disabled={disabled || isArchiving}
             className="gap-2 text-amber-500 hover:text-amber-600"
           >
-            <ChevronDown className="w-4 h-4" /> Archive
+            <Clock className="w-4 h-4" /> {message.status === 'archived' ? 'Unarchive' : 'Archive'}
           </Button>
           <Button
             variant="outline"
