@@ -13,7 +13,9 @@ test.describe('E2E Workflow', () => {
     await page.fill('input[name="confirmPassword"]', testPassword);
     await page.click('button:has-text("Sign Up")');
 
-    // Wait for redirect to dashboard
+    // Wait for redirect to landing page and click Dashboard
+    await expect(page).toHaveURL(/\/$/);
+    await page.locator('button:has-text("Dashboard")').first().click();
     await expect(page).toHaveURL(/.*\/dashboard/);
     await expect(page.locator('h1')).toContainText('Dashboard');
 
