@@ -30,9 +30,8 @@ export function LogoutDialog({ open, onOpenChange }: LogoutDialogProps) {
         icon: <Sparkles className="w-4 h-4 text-primary" />,
       });
       
-      // Redirect to login explicitly and refresh the router to clear state
-      router.push('/login');
-      router.refresh();
+      // Force a full browser reload to /login to completely clear client state and cache
+      window.location.href = '/login';
     } catch (error) {
       console.error('Error logging out:', error);
       setIsLoggingOut(false);

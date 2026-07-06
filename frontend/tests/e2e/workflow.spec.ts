@@ -70,8 +70,10 @@ test.describe('E2E Workflow', () => {
     // Wait for the sheet to open
     await expect(page.locator('text=Messages for John Doe').first()).toBeVisible();
 
-    // Click Generate AI Message
+    // Click Generate AI Message trigger
     await page.click('button:has-text("Generate AI Message")');
+    // Click the LinkedIn option from the dropdown menu
+    await page.click('div[role="menuitem"]:has-text("LinkedIn Message")');
 
     // Wait for generation to complete (message card appears)
     await expect(page.locator('.bg-card').filter({ hasText: 'Quality:' }).first()).toBeVisible({ timeout: 30000 });

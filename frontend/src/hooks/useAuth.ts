@@ -35,7 +35,7 @@ export function useAuth() {
         })
         
         if (_event === 'SIGNED_OUT') {
-          router.push('/login')
+          window.location.href = '/login';
         }
       }
     )
@@ -47,8 +47,7 @@ export function useAuth() {
 
   const signOut = async () => {
     await supabase.auth.signOut()
-    router.push('/login')
-    router.refresh()
+    window.location.href = '/login';
   }
 
   return { ...state, signOut }
